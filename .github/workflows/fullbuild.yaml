@@ -128,6 +128,69 @@ jobs:
           path: bin/*.deb
           retention-days: 5
 
+  control_interface:
+    runs-on: ubuntu-latest
+    steps:
+
+      - name: Checkout fog_sw
+        uses: actions/checkout@v2
+        with:
+          path: fog_sw
+          submodules: recursive
+
+      - name: Checkout ci-scripts
+        uses: actions/checkout@v2
+        with:
+          repository: tiiuae/fogsw-ci-scripts
+          path: fogsw-ci-scripts
+
+      - name: Run fog-sw docker build
+        run: |
+          set -eux
+          mkdir bin
+          pushd fogsw-ci-scripts
+          ./generate_deb.sh ../fog_sw/ros2_ws/src/control_interface/ ../bin/
+          popd
+
+      - name: Archive artifacts
+        uses: actions/upload-artifact@v2
+        with:
+          name: fog_sw
+          path: bin/*.deb
+          retention-days: 5
+
+  depthai_ctrl:
+    runs-on: ubuntu-latest
+    steps:
+
+      - name: Checkout fog_sw
+        uses: actions/checkout@v2
+        with:
+          path: fog_sw
+          submodules: recursive
+
+      - name: Checkout ci-scripts
+        uses: actions/checkout@v2
+        with:
+          repository: tiiuae/fogsw-ci-scripts
+          path: fogsw-ci-scripts
+
+      - name: Run fog-sw docker build
+        run: |
+          set -eux
+          mkdir bin
+          pushd fogsw-ci-scripts
+          ./generate_deb.sh ../fog_sw/ros2_ws/src/depthai_ctrl ../bin/
+          ./generate_deb.sh ../fog_sw/ros2_ws/src/depthai_ctrl ../bin/ host
+          popd
+
+      - name: Archive artifacts
+        uses: actions/upload-artifact@v2
+        with:
+          name: fog_sw
+          path: bin/*.deb
+          retention-days: 5
+
   basic_acceptance_test:
     runs-on: ubuntu-latest
     needs:
@@ -135,6 +198,8 @@ jobs:
       - fogsw_configs
       - fogsw_secure_os
       - mavlink-router
+      - control_interface
+      - depthai_ctrl
     steps:
 
       - name: Get artifacts
