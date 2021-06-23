@@ -66,11 +66,75 @@ jobs:
           path: bin/*.deb
           retention-days: 5
 
+  fogsw_secure_os:
+    runs-on: ubuntu-latest
+    steps:
+
+      - name: Checkout fog_sw
+        uses: actions/checkout@v2
+        with:
+          path: fog_sw
+          submodules: recursive
+
+      - name: Checkout ci-scripts
+        uses: actions/checkout@v2
+        with:
+          repository: tiiuae/fogsw-ci-scripts
+          path: fogsw-ci-scripts
+
+      - name: Run fog-sw docker build
+        run: |
+          set -eux
+          mkdir bin
+          pushd fogsw-ci-scripts
+          ./generate_deb.sh ../fog_sw/fogsw_secure_os ../bin/
+          popd
+
+      - name: Archive artifacts
+        uses: actions/upload-artifact@v2
+        with:
+          name: fog_sw
+          path: bin/*.deb
+          retention-days: 5
+
+  mavlink-router:
+    runs-on: ubuntu-latest
+    steps:
+
+      - name: Checkout fog_sw
+        uses: actions/checkout@v2
+        with:
+          path: fog_sw
+          submodules: recursive
+
+      - name: Checkout ci-scripts
+        uses: actions/checkout@v2
+        with:
+          repository: tiiuae/fogsw-ci-scripts
+          path: fogsw-ci-scripts
+
+      - name: Run fog-sw docker build
+        run: |
+          set -eux
+          mkdir bin
+          pushd fogsw-ci-scripts
+          ./generate_deb.sh ../fog_sw/mavlink-router ../bin/
+          popd
+
+      - name: Archive artifacts
+        uses: actions/upload-artifact@v2
+        with:
+          name: fog_sw
+          path: bin/*.deb
+          retention-days: 5
+
   basic_acceptance_test:
     runs-on: ubuntu-latest
     needs:
       - agent_protocol_splitter
       - fogsw_configs
+      - fogsw_secure_os
+      - mavlink-router
     steps:
 
       - name: Get artifacts
