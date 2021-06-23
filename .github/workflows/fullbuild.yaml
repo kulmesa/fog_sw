@@ -1,0 +1,53 @@
+name: main
+
+on:
+  push:
+    branches: [ wip_fullbuild ]
+
+jobs:
+  agent_protocol_splitter:
+    runs-on: ubuntu-latest
+    steps:
+
+      - name: Checkout fog_sw
+        uses: actions/checkout@v2
+        with:
+          path: fog_sw
+          submodules: recursive
+
+      - name: Checkout ci-scripts
+        uses: actions/checkout@v2
+        with:
+          repository: tiiuae/fogsw-ci-scripts
+          path: fogsw-ci-scripts
+
+      - name: Run fog-sw docker build
+        run: |
+          set -eux
+          mkdir bin
+          pushd fogsw-ci-scripts
+          ./generate_deb.sh ../fog_sw/agent_protocol_splitter ../bin/
+
+  fogsw_configs:
+    runs-on: ubuntu-latest
+    steps:
+
+      - name: Checkout fog_sw
+        uses: actions/checkout@v2
+        with:
+          path: fog_sw
+          submodules: recursive
+
+      - name: Checkout ci-scripts
+        uses: actions/checkout@v2
+        with:
+          repository: tiiuae/fogsw-ci-scripts
+          path: fogsw-ci-scripts
+
+      - name: Run fog-sw docker build
+        run: |
+          set -eux
+          mkdir bin
+          pushd fogsw-ci-scripts
+          ./generate_deb.sh ../fog_sw/fogsw_configs ../bin/
+          popd
