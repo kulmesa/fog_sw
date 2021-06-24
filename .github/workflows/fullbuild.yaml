@@ -604,8 +604,11 @@ jobs:
     container: ros:foxy-ros-base
     steps:
 
-      - name: Checkout communication-link
+      - name: Checkout fog_sw
         uses: actions/checkout@v2
+        with:
+          path: fog_sw
+          submodules: recursive
 
       - name: Setup Go environment
         uses: actions/setup-go@v2
@@ -633,7 +636,7 @@ jobs:
         run: |
           . /opt/ros/foxy/setup.sh
 
-          pushd ros2_ws/src/communication_link
+          cd fog_sw/ros2_ws/src/communication_link
 
           mkdir -p communicationlink/packaging/common
           cp -fR scripts/* communicationlink/packaging/common/
@@ -641,15 +644,12 @@ jobs:
           cd communicationlink
           params="-m $(realpath .) -v 2.0.0 -c $(git rev-parse HEAD) -g $(git log --date=format:%Y%m%d --pretty=~git%cd.%h -n 1) -b ${GITHUB_RUN_NUMBER}"
           ./packaging/common/package.sh $params
-          popd
-          mkdir bin
-          mv ros2_ws/src/communication_link/*.deb bin
 
       - name: Archive artifacts
         uses: actions/upload-artifact@v2
         with:
           name: fog_sw
-          path: bin/*.deb
+          path: fog_sw/ros2_ws/src/communication_link/*.deb
           retention-days: 5
 
   mission-engine:
@@ -660,8 +660,12 @@ jobs:
     container: ros:foxy-ros-base
     steps:
 
-      - name: Checkout mission-engine
+      - name: Checkout fog_sw
         uses: actions/checkout@v2
+        with:
+          path: fog_sw
+          submodules: recursive
+
 
       - name: Setup Go environment
         uses: actions/setup-go@v2
@@ -689,7 +693,7 @@ jobs:
         run: |
           . /opt/ros/foxy/setup.sh
 
-          pushd ros2_ws/src/communication_link
+          cd fog_sw/ros2_ws/src/communication_link
 
           mkdir -p missionengine/packaging/common
           cp -fR scripts/* missionengine/packaging/common/
@@ -697,15 +701,12 @@ jobs:
           cd missionengine
           params="-m $(realpath .) -v 2.0.0 -c $(git rev-parse HEAD) -g $(git log --date=format:%Y%m%d --pretty=~git%cd.%h -n 1) -b ${GITHUB_RUN_NUMBER}"
           ./packaging/common/package.sh $params
-          popd
-          mkdir bin
-          mv ros2_ws/src/communication_link/*.deb bin
 
       - name: Archive artifacts
         uses: actions/upload-artifact@v2
         with:
           name: fog_sw
-          path: bin/*.deb
+          path: fog_sw/ros2_ws/src/communication_link/*.deb
           retention-days: 5
 
   basic_acceptance_test:
