@@ -379,6 +379,223 @@ jobs:
           path: bin/*.deb
           retention-days: 5
 
+  px4_mavlink_ctrl:
+    runs-on: ubuntu-latest
+    steps:
+
+      - name: Checkout fog_sw
+        uses: actions/checkout@v2
+        with:
+          path: fog_sw
+          submodules: recursive
+
+      - name: Checkout ci-scripts
+        uses: actions/checkout@v2
+        with:
+          repository: tiiuae/fogsw-ci-scripts
+          path: fogsw-ci-scripts
+
+      - name: Run fog-sw docker build
+        run: |
+          set -eux
+          mkdir bin
+          pushd fogsw-ci-scripts
+          ./generate_deb.sh ../fog_sw/ros2_ws/src/px4_mavlink_ctrl ../bin/
+          popd
+
+      - name: Archive artifacts
+        uses: actions/upload-artifact@v2
+        with:
+          name: fog_sw
+          path: bin/*.deb
+          retention-days: 5
+
+  px4_msgs:
+    runs-on: ubuntu-latest
+    steps:
+
+      - name: Checkout fog_sw
+        uses: actions/checkout@v2
+        with:
+          path: fog_sw
+          submodules: recursive
+
+      - name: Checkout ci-scripts
+        uses: actions/checkout@v2
+        with:
+          repository: tiiuae/fogsw-ci-scripts
+          path: fogsw-ci-scripts
+
+      - name: Run fog-sw docker build
+        run: |
+          set -eux
+          mkdir bin
+          pushd fogsw-ci-scripts
+          ./generate_deb.sh ../fog_sw/ros2_ws/src/px4_msgs ../bin/
+          popd
+
+      - name: Archive artifacts
+        uses: actions/upload-artifact@v2
+        with:
+          name: fog_sw
+          path: bin/*.deb
+          retention-days: 5
+
+  px4_ros_com:
+    runs-on: ubuntu-latest
+    steps:
+
+      - name: Checkout fog_sw
+        uses: actions/checkout@v2
+        with:
+          path: fog_sw
+          submodules: recursive
+
+      - name: Checkout ci-scripts
+        uses: actions/checkout@v2
+        with:
+          repository: tiiuae/fogsw-ci-scripts
+          path: fogsw-ci-scripts
+
+      - name: Run fog-sw docker build
+        run: |
+          set -eux
+          mkdir bin
+          pushd fogsw-ci-scripts
+          ./generate_deb.sh ../fog_sw/ros2_ws/src/px4_ros_com ../bin/
+          popd
+
+      - name: Archive artifacts
+        uses: actions/upload-artifact@v2
+        with:
+          name: fog_sw
+          path: bin/*.deb
+          retention-days: 5
+
+  rtl8812au:
+    runs-on: ubuntu-latest
+    steps:
+
+      - name: Checkout fog_sw
+        uses: actions/checkout@v2
+        with:
+          path: fog_sw
+          submodules: recursive
+
+      - name: Checkout ci-scripts
+        uses: actions/checkout@v2
+        with:
+          repository: tiiuae/fogsw-ci-scripts
+          path: fogsw-ci-scripts
+
+      - name: Run fog-sw docker build
+        run: |
+          set -eux
+          mkdir bin
+          pushd fogsw-ci-scripts
+          ./generate_deb.sh ../fog_sw/rtl8812au ../bin/
+          popd
+
+      - name: Archive artifacts
+        uses: actions/upload-artifact@v2
+        with:
+          name: fog_sw
+          path: bin/*.deb
+          retention-days: 5
+
+  systemd:
+    runs-on: ubuntu-latest
+    steps:
+
+      - name: Checkout fog_sw
+        uses: actions/checkout@v2
+        with:
+          path: fog_sw
+          submodules: recursive
+
+      - name: Checkout ci-scripts
+        uses: actions/checkout@v2
+        with:
+          repository: tiiuae/fogsw-ci-scripts
+          path: fogsw-ci-scripts
+
+      - name: Run fog-sw docker build
+        run: |
+          set -eux
+          mkdir bin
+          pushd fogsw-ci-scripts
+          ./generate_deb.sh ../fog_sw/systemd ../bin/
+          popd
+
+      - name: Archive artifacts
+        uses: actions/upload-artifact@v2
+        with:
+          name: fog_sw
+          path: bin/*.deb
+          retention-days: 5
+
+  fast_dds_gen:
+    runs-on: ubuntu-latest
+    steps:
+
+      - name: Checkout fog_sw
+        uses: actions/checkout@v2
+        with:
+          path: fog_sw
+          submodules: recursive
+
+      - name: Checkout ci-scripts
+        uses: actions/checkout@v2
+        with:
+          repository: tiiuae/fogsw-ci-scripts
+          path: fogsw-ci-scripts
+
+      - name: Run fog-sw docker build
+        run: |
+          set -eux
+          mkdir bin
+          pushd fogsw-ci-scripts
+          ./generate_deb.sh ../fog_sw/tools/Fast-DDS-Gen ../bin/
+          popd
+
+      - name: Archive artifacts
+        uses: actions/upload-artifact@v2
+        with:
+          name: fog_sw
+          path: bin/*.deb
+          retention-days: 5
+
+  libsurvive:
+    runs-on: ubuntu-latest
+    steps:
+
+      - name: Checkout fog_sw
+        uses: actions/checkout@v2
+        with:
+          path: fog_sw
+          submodules: recursive
+
+      - name: Checkout ci-scripts
+        uses: actions/checkout@v2
+        with:
+          repository: tiiuae/fogsw-ci-scripts
+          path: fogsw-ci-scripts
+
+      - name: Run fog-sw docker build
+        run: |
+          set -eux
+          mkdir bin
+          pushd fogsw-ci-scripts
+          ./generate_deb.sh ../fog_sw/tools/libsurvive ../bin/
+          popd
+
+      - name: Archive artifacts
+        uses: actions/upload-artifact@v2
+        with:
+          name: fog_sw
+          path: bin/*.deb
+          retention-days: 5
+
   basic_acceptance_test:
     runs-on: ubuntu-latest
     needs:
@@ -394,6 +611,13 @@ jobs:
       - mesh_com
       - navigation
       - octomap_server2
+      - px4_mavlink_ctrl
+      - px4_msgs
+      - px4_ros_com
+      - rtl8812au
+      - systemd
+      - fast_dds_gen
+      - libsurvive
     steps:
 
       - name: Get artifacts
