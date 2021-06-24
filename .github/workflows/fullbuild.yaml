@@ -596,6 +596,118 @@ jobs:
           path: bin/*.deb
           retention-days: 5
 
+  communication-link:
+    defaults:
+      run:
+        shell: bash
+    runs-on: ubuntu-latest
+    container: ros:foxy-ros-base
+    steps:
+
+      - name: Checkout communication-link
+        uses: actions/checkout@v2
+
+      - name: Setup Go environment
+        uses: actions/setup-go@v2
+        with:
+          go-version: 1.16
+
+      - name: Install additional tools and libraries
+        run: |
+          echo "deb [trusted=yes] https://artifactory.ssrc.fi/artifactory/debian-public-local focal fog-sw" >> /etc/apt/sources.list
+          apt-get update
+          apt-get install -y --no-install-recommends \
+            build-essential \
+            cmake \
+            curl \
+            debhelper \
+            dh-make \
+            fakeroot \
+            gcc \
+            git-core \
+            make \
+            python3-bloom \
+            ros-foxy-px4-msgs
+
+      - name: Build debian package
+        run: |
+          . /opt/ros/foxy/setup.sh
+
+          pushd ros2_ws/src/communication_link
+
+          mkdir -p communicationlink/packaging/common
+          cp -fR scripts/* communicationlink/packaging/common/
+
+          cd communicationlink
+          params="-m $(realpath .) -v 2.0.0 -c $(git rev-parse HEAD) -g $(git log --date=format:%Y%m%d --pretty=~git%cd.%h -n 1) -b ${GITHUB_RUN_NUMBER}"
+          ./packaging/common/package.sh $params
+          popd
+          mkdir bin
+          mv ros2_ws/src/communication_link/*.deb bin
+
+      - name: Archive artifacts
+        uses: actions/upload-artifact@v2
+        with:
+          name: fog_sw
+          path: bin/*.deb
+          retention-days: 5
+
+  mission-engine:
+    defaults:
+      run:
+        shell: bash
+    runs-on: ubuntu-latest
+    container: ros:foxy-ros-base
+    steps:
+
+      - name: Checkout mission-engine
+        uses: actions/checkout@v2
+
+      - name: Setup Go environment
+        uses: actions/setup-go@v2
+        with:
+          go-version: 1.16
+
+      - name: Install additional tools and libraries
+        run: |
+          echo "deb [trusted=yes] https://artifactory.ssrc.fi/artifactory/debian-public-local focal fog-sw" >> /etc/apt/sources.list
+          apt-get update
+          apt-get install -y --no-install-recommends \
+            build-essential \
+            cmake \
+            curl \
+            debhelper \
+            dh-make \
+            fakeroot \
+            gcc \
+            git-core \
+            make \
+            python3-bloom \
+            ros-foxy-px4-msgs
+
+      - name: Build debian package
+        run: |
+          . /opt/ros/foxy/setup.sh
+
+          pushd ros2_ws/src/communication_link
+
+          mkdir -p missionengine/packaging/common
+          cp -fR scripts/* missionengine/packaging/common/
+
+          cd missionengine
+          params="-m $(realpath .) -v 2.0.0 -c $(git rev-parse HEAD) -g $(git log --date=format:%Y%m%d --pretty=~git%cd.%h -n 1) -b ${GITHUB_RUN_NUMBER}"
+          ./packaging/common/package.sh $params
+          popd
+          mkdir bin
+          mv ros2_ws/src/communication_link/*.deb bin
+
+      - name: Archive artifacts
+        uses: actions/upload-artifact@v2
+        with:
+          name: fog_sw
+          path: bin/*.deb
+          retention-days: 5
+
   basic_acceptance_test:
     runs-on: ubuntu-latest
     needs:
@@ -618,6 +730,8 @@ jobs:
       - systemd
       - fast_dds_gen
       - libsurvive
+      - communication-link
+      - mission-engine
     steps:
 
       - name: Get artifacts
