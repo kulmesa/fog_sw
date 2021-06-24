@@ -212,6 +212,7 @@ jobs:
           set -eux
           mkdir bin
           pushd fogsw-ci-scripts
+          export ROS=1
           ./generate_deb.sh ../fog_sw/ros2_ws/src/fog_core ../bin/
           popd
 
@@ -243,7 +244,70 @@ jobs:
           set -eux
           mkdir bin
           pushd fogsw-ci-scripts
+          export ROS=1
           ./generate_deb.sh ../fog_sw/ros2_ws/src/fog_msgs ../bin/
+          popd
+
+      - name: Archive artifacts
+        uses: actions/upload-artifact@v2
+        with:
+          name: fog_sw
+          path: bin/*.deb
+          retention-days: 5
+
+  indoor_pos:
+    runs-on: ubuntu-latest
+    steps:
+
+      - name: Checkout fog_sw
+        uses: actions/checkout@v2
+        with:
+          path: fog_sw
+          submodules: recursive
+
+      - name: Checkout ci-scripts
+        uses: actions/checkout@v2
+        with:
+          repository: tiiuae/fogsw-ci-scripts
+          path: fogsw-ci-scripts
+
+      - name: Run fog-sw docker build
+        run: |
+          set -eux
+          mkdir bin
+          pushd fogsw-ci-scripts
+          ./generate_deb.sh ../fog_sw/ros2_ws/src/indoor_pos ../bin/
+          popd
+
+      - name: Archive artifacts
+        uses: actions/upload-artifact@v2
+        with:
+          name: fog_sw
+          path: bin/*.deb
+          retention-days: 5
+
+  mesh_com:
+    runs-on: ubuntu-latest
+    steps:
+
+      - name: Checkout fog_sw
+        uses: actions/checkout@v2
+        with:
+          path: fog_sw
+          submodules: recursive
+
+      - name: Checkout ci-scripts
+        uses: actions/checkout@v2
+        with:
+          repository: tiiuae/fogsw-ci-scripts
+          path: fogsw-ci-scripts
+
+      - name: Run fog-sw docker build
+        run: |
+          set -eux
+          mkdir bin
+          pushd fogsw-ci-scripts
+          ./generate_deb.sh ../fog_sw/ros2_ws/src/mesh_com ../bin/ modules/mesh_com/
           popd
 
       - name: Archive artifacts
@@ -264,6 +328,8 @@ jobs:
       - depthai_ctrl
       - fog_core
       - fog_msgs
+      - indoor_pos
+      - mesh_com
     steps:
 
       - name: Get artifacts
