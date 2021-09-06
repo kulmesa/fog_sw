@@ -1,6 +1,6 @@
 # Drone HW setup instructions
 
-testing moar
+testing moar and
 
 Here are step by step instructions to setup ROS2 environment into Drone HW.
 
