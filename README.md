@@ -1,7 +1,7 @@
 # Drone HW setup instructions
 
 herps
-testing moar and
+testing moar and asfdas
 
 Here are step by step instructions to setup ROS2 environment into Drone HW.
 
