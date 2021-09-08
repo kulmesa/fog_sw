@@ -8,6 +8,7 @@ asdf3
 asdf4
 asdf5
 asdf6
+asdf7
 
 Here are step by step instructions to setup ROS2 environment into Drone HW.
 
