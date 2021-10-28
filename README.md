@@ -25,6 +25,7 @@ asdf20
 asdf21
 asdf22
 asdf23
+asdf24
 
 Here are step by step instructions to setup ROS2 environment into Drone HW.
 
